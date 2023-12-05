@@ -2,39 +2,40 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/devil1229/pokedexcli/internal/pokeapi"
 )
 
+//callback func for map command
 func commandMap(currentConfig *config) error {
-	// fmt.Print(currentConfig)
-	response, err := pokeapi(currentConfig.next)
-
+	//get the list of location areas
+	response, err := currentConfig.pokeapiClient.ListLocationAreas(currentConfig.nextLocationAreaURL)
 	if err != nil {
 		return err
 	}
-	currentConfig.next = response.Next
-	currentConfig.previous = response.Previous
+	fmt.Println("Location Areas: ")
+	
+	//update the nextpage and previous page url
+	currentConfig.nextLocationAreaURL = response.Next
+	currentConfig.previousLocationAreaURL = response.Previous
 	for _, result := range response.Results {
-		fmt.Println(result.Name)
+		fmt.Println(" - " , result.Name)
 	}
 	return nil
 }
 
+//callback func for mapb command
 func commandMapB(currentConfig *config) error {
-	// fmt.Print(currentConfig)
-	if currentConfig.previous == nil {
+	if currentConfig.previousLocationAreaURL == nil {
 		fmt.Println("Wrong Input")
 		fmt.Println("Please use \"map\" command first and then \"mapb\"")
 		return nil
 	}
-	response, err := pokeapi(*currentConfig.previous)
-
+	response, err := currentConfig.pokeapiClient.ListLocationAreas(currentConfig.previousLocationAreaURL)
 	if err != nil {
 		return err
 	}
-	currentConfig.next = response.Next
-	currentConfig.previous = response.Previous
+	fmt.Println("Location Areas: ")
+	currentConfig.nextLocationAreaURL = response.Next
+	currentConfig.previousLocationAreaURL = response.Previous
 	for _, result := range response.Results {
 		fmt.Println(result.Name)
 	}

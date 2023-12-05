@@ -7,15 +7,14 @@ import (
 	"strings"
 )
 
-var currentConfig = config{}
-
+//basic struct for clicommand
 type cliCommand struct {
 	name        string
 	description string
 	callback    func(*config) error
 }
 
-func startrepl() {
+func startrepl(cfg *config) {
 
 	// Create a scanner for standard input (os.Stdin)
 	scanner := bufio.NewScanner(os.Stdin)
@@ -28,6 +27,7 @@ func startrepl() {
 		scanner.Scan()
 		// Retrieve the scanned text
 		input := scanner.Text()
+
         // Split the input into commands based on spaces by cleaninput function
 		commands := cleanInput(input)
         
@@ -36,9 +36,11 @@ func startrepl() {
 			continue
 		}
 
+        //get all the available commands
 		availableCommands := getALlCliCommands()
 		commandName := commands[0]
         
+		//check if input command is there in our map or not
         command, ok := availableCommands[commandName]
 
 		if !ok {
@@ -47,7 +49,8 @@ func startrepl() {
 			continue
 		}
 
-		err := command.callback(&currentConfig)
+		//calling the callback func for the command
+		err := command.callback(cfg)
 
 		if err != nil {
 			fmt.Printf("Something Went Wrong : %v\n", err)
@@ -65,6 +68,7 @@ func cleanInput(str string) []string {
 
 func getALlCliCommands() map[string]cliCommand {
 
+	//returning the map of all available commands
 	return map[string]cliCommand{
 		"help": {
 			name:        "help",
