@@ -1,47 +1,48 @@
-package main
+package pokeapi
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
-type LocationAreaResponse struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous *string `json:"previous"`
-	Results  []LocationAreaResult `json:"results"`
+const baseURL = ""
+
+type Client struct {
+	httpClient http.Client
 }
 
-// LocationAreaResult represents the structure of each result item in the response.
-type LocationAreaResult struct {
-	Name string `json:"name"`
-	URL  string `json:"url"`
+func newClient() Client {
+	return Client{
+		httpClient: http.Client{
+			Timeout: time.Minute,
+		},
+	}
 }
 
-
-func makeApiCall(url string) (LocationAreaResponse , error){
+func pokeapi(url string) (LocationAreaResponse, error) {
 	resp, err := http.Get(url)
 	var response LocationAreaResponse
 
 	if err != nil {
 		//fmt.Println("Error:", err)
-		return response , err
+		return response, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		//fmt.Println("Error reading response body:", err)
-		return response , err
+		return response, err
 	}
 	// Unmarshal the JSON data into the LocationAreaResponse struct
 	errMarshal := json.Unmarshal(body, &response)
 
 	if errMarshal != nil {
 		fmt.Println("Error:", err)
-		return response , errMarshal
+		return response, errMarshal
 	}
 
 	// Accessing the fields of the struct
@@ -54,6 +55,6 @@ func makeApiCall(url string) (LocationAreaResponse , error){
 	// 	fmt.Printf("Name: %s, URL: %s\n", result.Name, result.URL)
 	// }
 
-	return response , nil
+	return response, nil
 
 }
