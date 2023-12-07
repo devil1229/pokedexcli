@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, string) error
 }
 
 func startrepl(cfg *config) {
@@ -39,6 +39,11 @@ func startrepl(cfg *config) {
         //get all the available commands
 		availableCommands := getALlCliCommands()
 		commandName := commands[0]
+		var arg = ""
+		if len(commands) == 2 {
+			arg = commands[1]
+		}
+		 
         
 		//check if input command is there in our map or not
         command, ok := availableCommands[commandName]
@@ -50,7 +55,7 @@ func startrepl(cfg *config) {
 		}
 
 		//calling the callback func for the command
-		err := command.callback(cfg)
+		err := command.callback(cfg, arg)
 
 		if err != nil {
 			fmt.Printf("Something Went Wrong : %v\n", err)
@@ -89,6 +94,26 @@ func getALlCliCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Displays the names of privious 20 location areas. Pokemon's way to go back",
 			callback:    commandMapB,
+		},
+		"explore": {
+			name:        "explore <ARG>",
+			description: "Explore any location area by passing it in ARG to find the pokemon",
+			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <ARG>",
+			description: "Catch pokemon by passing the name in ARG",
+			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect <ARG>",
+			description: "Inspect pokemon by passing the name in ARG",
+			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Get all the pokomon caught by you",
+			callback:    commandPokedex,
 		},
 	}
 }

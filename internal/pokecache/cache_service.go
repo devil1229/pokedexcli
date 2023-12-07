@@ -1,16 +1,16 @@
 package pokecache
 
 import (
-	"fmt"
+	//"fmt"
 	"time"
 )
 
 
 func (sm *Cache) Add(key string, value []byte) {
-	fmt.Println("inside add")
+	//fmt.Println("inside add")
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
-    fmt.Println("Used Cache Add")
+    //fmt.Println("Used Cache Add")
 	entry := cacheEntry{
 		createdAt: time.Now(),
 		val:       value,
@@ -22,7 +22,7 @@ func (sm *Cache) Add(key string, value []byte) {
 func (sm *Cache) Get(key string) ([]byte, bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
-    fmt.Println("Used Cache Get")
+   // fmt.Println("Used Cache Get")
 	value, exists := sm.cache[key]
 	return value.val, exists
 }
@@ -30,7 +30,7 @@ func (sm *Cache) Get(key string) ([]byte, bool) {
 func (sm *Cache) realLoop() {
 	
 	sm.mu.Lock()
-	fmt.Println("Used Cache eviction")
+	//fmt.Println("Used Cache eviction")
 	for key, val := range sm.cache {
 		durationSinceCreation := time.Since(val.createdAt)
 		if durationSinceCreation > sm.td {
