@@ -13,11 +13,8 @@ func NewCache(d time.Duration) *Cache {
 
 	// Start a goroutine to run the function every time the ticker ticks
 	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				memoryCache.realLoop()
-			}
+		for range ticker.C{
+			memoryCache.realLoop()
 		}
 	}()
 

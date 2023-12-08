@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-
+//method to add data to cache
 func (sm *Cache) Add(key string, value []byte) {
 	//fmt.Println("inside add")
 	sm.mu.Lock()
@@ -19,6 +19,7 @@ func (sm *Cache) Add(key string, value []byte) {
 	sm.cache[key] = entry
 }
 
+//method to retrive data from cache
 func (sm *Cache) Get(key string) ([]byte, bool) {
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
@@ -27,6 +28,8 @@ func (sm *Cache) Get(key string) ([]byte, bool) {
 	return value.val, exists
 }
 
+
+//just clean the cache on regular intervals so that we should not run into memory limit or use old api data
 func (sm *Cache) realLoop() {
 	
 	sm.mu.Lock()

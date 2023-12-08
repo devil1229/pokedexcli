@@ -13,7 +13,8 @@ func (c *Client) GetPokemonDetails(name string, cache *pokecache.Cache) (Pokemon
 	endpoint := "pokemon/" + name
 	fullURL := baseURL + endpoint
 	var data []byte
-
+    
+	//checking the cache hit
 	data1, ok := cache.Get(fullURL)
 	if ok {
 		data = data1
@@ -40,6 +41,7 @@ func (c *Client) GetPokemonDetails(name string, cache *pokecache.Cache) (Pokemon
 		if err != nil {
 			return Pokemon{}, err
 		}
+		//catching the data
 		cache.Add(fullURL, data2)
 		data = data2
 	}
