@@ -11,6 +11,7 @@ Learned many things in Go -
 5. Get hands-on practice with local Go development and tooling
 6. bout caching and how to use it to improve performance
 
-Build it by following the documentation at Boot.dev 
+Build it by following the documentation at Boot.dev
+Learned to read documentation
 
 Link - https://www.boot.dev/assignments/df9ba9c7-5a4c-4641-b707-24324a0f9d6d
